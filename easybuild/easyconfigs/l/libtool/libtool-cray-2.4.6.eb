@@ -1,0 +1,43 @@
+# @authors: gppezzi, victorusu (CSCS)
+
+easyblock = "ConfigureMake"
+
+name = 'libtool'
+version = 'cray-2.4.6'
+
+homepage = 'https://github.com/Cray/libtool'
+description = """Mirror of http://git.savannah.gnu.org/cgit/libtool.git with
+support for the Cray Compiling Environment (CCE)"""
+
+toolchain = SYSTEM
+
+local_commit = 'a1cb49a1dbec3f308ce18413d26b94735a379692'
+
+sources = [{
+    'filename': 'EB_git-%s.tar.gz' % local_commit,
+    'git_config': {
+        'url': 'https://github.com/Cray',
+        'repo_name': 'libtool',
+        'commit': '%s' % local_commit,
+        'recursive': True,
+    }
+}]
+
+patches = ['libtool-cray-14.11.patch']
+
+unpack_options = '--strip 1'
+
+dependencies = [
+    ('help2man', '1.48.3'),
+    ('Automake', '1.16.3'),
+]
+
+preconfigopts  = 'mv gl/top/README-release.diff gl/top/README-release.diff.bak && '
+preconfigopts += './bootstrap && '
+
+sanity_check_paths={
+    'files': ['lib/libltdl.so'],
+    'dirs': ['lib'],
+}
+
+moduleclass = 'lib'

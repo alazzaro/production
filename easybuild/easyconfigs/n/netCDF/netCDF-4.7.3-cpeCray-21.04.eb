@@ -1,0 +1,43 @@
+# contributed by Alfio Lazzaro (HPE)
+name = 'netCDF'
+version = '4.7.3'
+
+homepage = 'http://www.unidata.ucar.edu/software/netcdf/'
+description = """
+    NetCDF (network Common Data Form) is a set of software libraries and
+    machine-independent data formats that support the creation, access, and
+    sharing of array-oriented scientific data.
+"""
+
+toolchain = {'name': 'cpeCray', 'version': '21.04'}  
+toolchainopts = {'usempi': True, 'pic': True}
+
+source_urls = ['https://github.com/Unidata/%(namelower)s-c/archive/']
+sources = ['v%(version)s.tar.gz']
+
+builddependencies = [
+    ('CMake', '3.20.3', '', True),
+]
+dependencies = [
+    ('HDF5', '1.12.0', '-parallel'),
+    ('Szip', '2.1.1'),
+]
+
+patches = [
+    'netCDF-%(version)s-cpeCray-21.04.patch',
+]
+
+preconfigopts = 'unset CFLAGS && unset FCFLAGS && unset CPPFLAGS && unset LDFLAGS && unset CXXFLAGS && export CC=cc && export CXX=CC && '
+
+# make sure both static and shared libs are built
+configopts = [
+    "-DBUILD_SHARED_LIBS=ON ",
+    "-DBUILD_SHARED_LIBS=OFF ",
+]
+
+# limit parallel build to 1
+maxparallel = 1
+
+runtest = False
+
+moduleclass = 'data'

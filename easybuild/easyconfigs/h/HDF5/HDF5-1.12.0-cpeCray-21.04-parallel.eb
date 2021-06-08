@@ -1,0 +1,32 @@
+# author: Alfio Lazzaro (HPE)
+
+easyblock = 'ConfigureMake'
+
+name = 'HDF5'
+version = '1.12.0'
+versionsuffix = '-parallel'
+
+homepage = 'http://www.hdfgroup.org/HDF5/'
+description = """HDF5 is a unique technology suite that makes possible the management of
+ extremely large and complex data collections."""
+
+toolchain = {'name': 'cpeCray', 'version': '21.04'}
+toolchainopts = {'optarch': True, 'usempi': True, 'pic': True}
+
+source_urls = [
+    'https://support.hdfgroup.org/ftp/%(name)s/releases/%(namelower)s-%(version_major_minor)s/%(namelower)s-%(version)s/src',
+]
+sources = [SOURCELOWER_TAR_GZ]
+
+
+preconfigopts = 'unset CFLAGS && unset FCFLAGS && unset CPPFLAGS && unset LDFLAGS && unset CXXFLAGS && export CC=cc && export CXX=CC && export FC=ftn && '
+
+configopts = "--disable-silent-rules --disable-sharedlib-rpath --enable-parallel --enable-fortran --enable-static --with-pic --enable-shared --with-zlib=/usr/include,/usr/lib64 --enable-cxx --enable-unsupported --with-default-api-version=v110 CC=cc CXX=CC FC=ftn"
+
+prebuildopts = 'rm libtool && ln -s $EBROOTLIBTOOL/bin/libtool . && '
+
+buildopts = '-l6'
+
+builddependencies = [('libtool', 'cray-2.4.6', '', True)]
+
+moduleclass = 'data'

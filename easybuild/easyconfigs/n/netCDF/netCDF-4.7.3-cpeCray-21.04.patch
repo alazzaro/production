@@ -1,0 +1,11 @@
+--- ncdump/ocprint.c.orig	2021-06-07 22:58:21.510702758 +0200
++++ ncdump/ocprint.c	2021-06-07 22:58:32.318979893 +0200
+@@ -56,7 +56,7 @@
+ /*Mnemonic*/
+ #define TOPLEVEL 1
+ 
+-int ocdebug;
++extern int ocdebug;
+ 
+ static OCerror ocstat;
+ static OClink glink;
