@@ -1,0 +1,40 @@
+# Alfio Lazzaro (HPE)
+easyblock = 'ConfigureMake'
+
+name = 'netCDF-Fortran'
+version = "4.5.2"
+
+homepage = 'http://www.unidata.ucar.edu/software/netcdf/'
+description = """NetCDF (network Common Data Form) is a set of software libraries 
+ and machine-independent data formats that support the creation, access, and sharing of array-oriented 
+ scientific data."""
+
+toolchain = {'name': 'cpeCray', 'version': '21.04'}
+toolchainopts = {'usempi': True, 'pic': True}
+
+sources = [SOURCELOWER_TAR_GZ]
+source_urls = [
+    'ftp://ftp.unidata.ucar.edu/pub/netcdf/',
+    'ftp://ftp.unidata.ucar.edu/pub/netcdf/old',
+]
+
+dependencies = [('netCDF', '4.7.3')]
+
+# To-do: CCE produces uppercase mod files, need -emf flag, but I cannot set it.
+# Need to use the following workaround by CSCS
+#preconfigopts = 'export FCFLAGS="-emf -ffree" && export CC=cc && export CXX=CC && export FC=ftn && '
+#configopts = "FCFLAGS=\"-emf -ffree\""
+
+# Copies uppercase mod files to lowercase in order to avoid failure of 'make install'
+preinstallopts = 'cd %(builddir)s/netcdf-fortran-%(version)s/fortran && '
+preinstallopts += 'for i in *.mod; do cp $i ${i,,}; done && cd .. && '
+
+# Create symlinks of lowercase modfiles to uppercase (CrayCCE default).
+postinstallcmds =  [
+    'cd %(installdir)s/include && for i in *.mod; do ln -s $i $(echo $i | awk \'{ sub(/.mod$/,""); print toupper($0) ".mod" }\') ; done',
+]
+
+# limit parallel build to 1
+maxparallel = 1
+
+moduleclass = 'data'
