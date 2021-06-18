@@ -20,10 +20,11 @@ dependencies = [
 ]
 
 patches = [
+    'WRFv4.3_parallel_build_fix.patch',
     'WRFv4_netCDF-Fortran_separate_path.patch',
 ]
-# limit parallel build to 1
-maxparallel = 1
+# limit parallel build to 20
+maxparallel = 20
 
 # Don't run tests, they use mpiru
 runtest = False
